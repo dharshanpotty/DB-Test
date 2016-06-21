@@ -20,8 +20,11 @@
     //create table and insert some record
     function populateDB(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS SoccerPlayer (id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Club TEXT NOT NULL)');
+        alert("Success in creating in Table");
         tx.executeSql('INSERT INTO SoccerPlayer(Name,Club) VALUES ("Alexandre Pato", "AC Milan")');
+        alert("Success in creating insert");
         tx.executeSql('INSERT INTO SoccerPlayer(Name,Club) VALUES ("Van Persie", "Arsenal")');
+        alert("Success in creating insert");
     }
  
     //function will be called when an error occurred
