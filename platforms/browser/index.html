@@ -68,6 +68,7 @@
         function onDeviceReady() {
             var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
             db.transaction(populateDB, errorCB, successCB);
+            alert("App is Ready!");
         }
 
         //Insert query
@@ -114,30 +115,54 @@
         }
 
     </script>
-    <title>Hello World</title>
+    <title>Task Creator</title>
 </head>
 <body>
-    <h1>My first App</h1>
-    <p>Open Database</p>
-    <div id="qrpopup">
-        <!--The hidden div tag for implementing the popup-->
-        <hr />
-        <input type="text" id="editNameBox"><br>
-        <input type="text" id="editNumberBox"><br>
-        <button onclick="goDelete()">Delete</button>
-        <button onclick="goEdit()">Edit</button>
-        <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
-    </div>
+    <div data-role="tabs">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#one" data-theme="b" data-ajax="false">Create Task</a></li>
+                <li><a href="#two" data-theme="b" data-ajax="false">View Task</a></li>
+                <li><a href="#three" data-theme="b" data-ajax="false">Edit Task</a></li>
+            </ul>
+        </div>
+        <div id="one" class="ui-content">
 
-    <div>
-        Name<input type="text" value="Name" id="txtName">
-        Number<input type="text" value="123" id="txtNumber"><hr />
+
+            <div>
+                Name<input type="text" value="Name" id="txtName">
+                Number<input type="text" value="123" id="txtNumber"><hr />
+            </div>
+            <div style="text-align: center">
+                <button onclick="goInsert()">Insert</button>
+                <button onclick="goSearch()">Search</button>
+                <button onclick="successCB()">Show All</button>
+            </div>
+        </div>
+
+
+        <div id="two" class="ui-content">
+            <div id="qrpopup">
+                <!--The hidden div tag for implementing the popup-->
+                <hr />
+                <input type="text" id="Text1"><br>
+                <input type="text" id="Text2"><br>
+                <button onclick="goDelete()">Delete</button>
+                <button onclick="goEdit()">Edit</button>
+                <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
+            </div>
+            <div id="tblDiv"></div>
+        </div>
+
+
+
+        <div id="three" class="ui-content">
+        </div>
     </div>
-    <div id="tblDiv"></div>
-    <div style="text-align: center">
-        <button onclick="goInsert()">Insert</button>
-        <button onclick="goSearch()">Search</button>
-        <button onclick="successCB()">Show All</button>
+    <div data-role="footer" data-position="fixed" data-tap-toggle="false" class="jqm-footer">
+        <p>jQuery Mobile Demos version <span class="jqm-version"></span></p>
+        <p>Copyright 2014 The jQuery Foundation</p>
     </div>
+    <!-- /footer -->
 </body>
 </html>
