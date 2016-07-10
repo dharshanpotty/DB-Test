@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" /><link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
     <link href="css/jquery-ui.css" rel="stylesheet" />
     <link href="css/Style.css" rel="stylesheet" />
     <script type="text/javascript" src="js/index.js"></script>
@@ -17,23 +18,23 @@
         // Populate the database
         //
         function populateDB(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id INTEGER PRIMARY KEY AUTOINCREMENT, name,number)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS TASK (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT,number TEXT,towhom TEXT)');
         }
 
         // Query the database
         //
         function queryDB(tx) {
-            tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+            tx.executeSql('SELECT * FROM TASK', [], querySuccess, errorCB);
         }
 
         function searchQueryDB(tx) {
-            tx.executeSql("SELECT * FROM DEMO where name like ('%" + document.getElementById("txtName").value + "%')",
+            tx.executeSql("SELECT * FROM TASK where name like ('%" + document.getElementById("txtName").value + "%')",
                     [], querySuccess, errorCB);
         }
         // Query the success callback
         //
         function querySuccess(tx, results) {
-            var tblText = '<table id="t01"><tr><th>ID</th> <th>Name</th> <th>Number</th></tr>';
+            var tblText = '<table id="t01"><tr><th>ID</th> <th>Task Name</th> <th>Task Desc</th><th>To Whom</th><th>Submission Date</th></tr>';
             var len = results.rows.length;
             for (var i = 0; i < len; i++) {
                 var tmpArgs = results.rows.item(i).id + ",'" + results.rows.item(i).name
@@ -47,20 +48,20 @@
 
         //Delete query
         function deleteRow(tx) {
-            tx.executeSql('DELETE FROM DEMO WHERE id = ' + currentRow, [], queryDB, errorCB);
+            tx.executeSql('DELETE FROM TASK WHERE id = ' + currentRow, [], queryDB, errorCB);
         }
 
         // Transaction error callback
         //
         function errorCB(err) {
-            alert("Error processing SQL: " + err.code);
+            alert("Error processing SQL: " + err.message);
         }
 
         // Transaction success callback
         //
         function successCB() {
             var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
-            db.transaction(queryDB, errorCB);
+            db.transaction(queryDB, errorCB);            
         }
 
         // Cordova is ready
@@ -74,8 +75,12 @@
         //Insert query
         //
         function insertDB(tx) {
-            tx.executeSql('INSERT INTO DEMO (name,number) VALUES ("' + document.getElementById("txtName").value
-                    + '","' + document.getElementById("txtNumber").value + '")');
+            tx.executeSql('INSERT INTO TASK (name,number) VALUES ("' + document.getElementById("txtName").value
+                   + '","' + document.getElementById("txtDesc").value
+                   + '","' + document.getElementById("txtWhom").value
+                   + '")');
+            alert("Task Created Successfully!");
+                    
         }
 
         function goInsert() {
@@ -104,8 +109,8 @@
         }
 
         function editRow(tx) {
-            tx.executeSql('UPDATE DEMO SET name ="' + document.getElementById("editNameBox").value +
-                    '", number= "' + document.getElementById("editNumberBox").value + '" WHERE id = '
+            tx.executeSql('UPDATE TASK SET TaskName ="' + document.getElementById("editNameBox").value +
+                    '", TaskDesc= "' + document.getElementById("editNumberBox").value + '" WHERE id = '
                     + currentRow, [], queryDB, errorCB);
         }
         function goEdit() {
@@ -118,51 +123,41 @@
     <title>Task Creator</title>
 </head>
 <body>
-    <div data-role="tabs">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#one" data-theme="b" data-ajax="false">Create Task</a></li>
-                <li><a href="#two" data-theme="b" data-ajax="false">View Task</a></li>
-                <li><a href="#three" data-theme="b" data-ajax="false">Edit Task</a></li>
-            </ul>
-        </div>
-        <div id="one" class="ui-content">
-
-
-            <div>
-                Name<input type="text" value="Name" id="txtName">
-                Number<input type="text" value="123" id="txtNumber"><hr />
-            </div>
-            <div style="text-align: center">
-                <button onclick="goInsert()">Insert</button>
-                <button onclick="goSearch()">Search</button>
-                <button onclick="successCB()">Show All</button>
-            </div>
-        </div>
-
-
-        <div id="two" class="ui-content">
-            <div id="qrpopup">
-                <!--The hidden div tag for implementing the popup-->
-                <hr />
-                <input type="text" id="Text1"><br>
-                <input type="text" id="Text2"><br>
-                <button onclick="goDelete()">Delete</button>
-                <button onclick="goEdit()">Edit</button>
-                <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
-            </div>
-            <div id="tblDiv"></div>
-        </div>
-
-
-
-        <div id="three" class="ui-content">
-        </div>
+    <h1>Task Creator</h1>
+    <div id="qrpopup">
+        <!--The hidden div tag for implementing the popup-->
+        <hr />
+        <input type="text" id="editNameBox"><br>
+        <input type="text" id="editNumberBox"><br>
+        <button onclick="goDelete()">Delete</button>
+        <button onclick="goEdit()">Edit</button>
+        <button onclick="document.getElementById('qrpopup').style.display='none';">Discard</button>
     </div>
-    <div data-role="footer" data-position="fixed" data-tap-toggle="false" class="jqm-footer">
-        <p>jQuery Mobile Demos version <span class="jqm-version"></span></p>
-        <p>Copyright 2014 The jQuery Foundation</p>
+
+    <div>
+        <div class="ui-field-contain">
+            <label for="text-12">Task Name:</label>
+            <input name="txtName" id="txtName" value="" type="text">
+        </div>
+        <div class="ui-field-contain">
+            <label for="text-12">Description:</label>
+            <input name="txtDesc" id="txtDesc" value="" type="text">
+        </div>
+        <div class="ui-field-contain">
+            <label for="text-12">To Whom:</label>
+            <input name="txtWhom" id="txtWhom" value="" type="text">
+        </div>
+        <div class="ui-field-contain">
+            <label for="text-12">Submission Date:</label>
+            <input name="txtSubDate" id="txtSubDate" value="" type="date">
+        </div>
+        <hr />
     </div>
-    <!-- /footer -->
+    <div style="text-align: center">
+        <button onclick="goInsert()">Insert</button>
+        <button onclick="goSearch()">Search</button>
+        <button onclick="successCB()">Show All</button>
+    </div>
+    <div id="tblDiv"></div>
 </body>
 </html>
